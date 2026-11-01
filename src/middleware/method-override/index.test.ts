@@ -162,6 +162,22 @@ describe('Method Override Middleware', () => {
         headerValue: 'DELETE', // It does not modify the headers.
       })
     })
+
+    it('Should override body-bearing POST to GET', async () => {
+      const res = await app.request('/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-METHOD-OVERRIDE': 'GET',
+        },
+        body: JSON.stringify({ message: 'Hello' }),
+      })
+      expect(res.status).toBe(200)
+      expect(await res.json()).toEqual({
+        method: 'GET',
+        headerValue: null,
+      })
+    })
   })
 
   describe('Query', () => {
